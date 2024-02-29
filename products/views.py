@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from django.views.generic import CreateView, UpdateView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, UpdateView, ListView
 
-from .models import Product, QCStock
+from .models import Product, QCStock, TransferNote
 
 
 def detail(request):
@@ -47,4 +48,31 @@ class UpdateQCStockView(UpdateView):
         return context
 
     def get_success_url(self):
-        return self.get_object().get_update_url()
+        return reverse_lazy('products:qc-stock-list')
+
+
+class QCStockListView(ListView):
+    model = QCStock
+    template_name = 'products/qc_stock_list.html'
+    context_object_name = 'qc_stocks'
+    paginate_by = 10
+    queryset = QCStock.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "QC Stock List - Warehouse Management System"
+        return context
+
+
+class CreateTransferNoteView(CreateView):
+    model = TransferNote
+    template_name = 'products/create_transfer_note.html'
+    fields = ['quantity']
+    success_url = reverse_lazy('products:qc-stock-list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = Product.objects.get(pk=self.request.GET.get('product_id'))
+        context['title'] = "Create Transfer Note - Warehouse Management System"
+        context['product'] = product
+        return context
