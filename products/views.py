@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -7,6 +8,7 @@ from django.views import View
 from .models import Product, QCStock, TransferNote, WarehouseStock
 
 
+@login_required
 def detail(request):
     products = Product.objects.all()
     context = {
@@ -16,6 +18,7 @@ def detail(request):
     return render(request, "products/products.html", context)
 
 
+@login_required
 def scan_stock(request):
     qc_stocks = QCStock.objects.all()
     context = {
@@ -24,7 +27,8 @@ def scan_stock(request):
     }
     return render(request, "products/scan_stock.html", context)
 
-class ProductCreateView(CreateView):
+
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     fields = [
         'product_code',
@@ -44,7 +48,7 @@ class ProductCreateView(CreateView):
         return context
 
 
-class UpdateQCStockView(UpdateView):
+class UpdateQCStockView(LoginRequiredMixin, UpdateView):
     model = QCStock
     fields = ['quantity']
     template_name = 'products/update_qc_stock.html'
@@ -61,7 +65,7 @@ class UpdateQCStockView(UpdateView):
         return reverse_lazy('products:qc-stock-list')
 
 
-class QCStockListView(ListView):
+class QCStockListView(LoginRequiredMixin, ListView):
     model = QCStock
     template_name = 'products/qc_stock_list.html'
     context_object_name = 'qc_stocks'
@@ -74,7 +78,7 @@ class QCStockListView(ListView):
         return context
 
 
-class CreateTransferNoteView(CreateView, LoginRequiredMixin):
+class CreateTransferNoteView(LoginRequiredMixin, CreateView):
     model = TransferNote
     template_name = 'products/create_transfer_note.html'
     fields = ['quantity']
@@ -99,7 +103,7 @@ class CreateTransferNoteView(CreateView, LoginRequiredMixin):
         return super().form_valid(form)
 
 
-class HomePage(View):
+class HomePage(LoginRequiredMixin, View):
     template_name = "products/home_page.html"
 
     def get(self, request, *args, **kwargs):
@@ -109,7 +113,7 @@ class HomePage(View):
         return render(request, self.template_name, context)
 
 
-class TransferListView(ListView):
+class TransferListView(LoginRequiredMixin, ListView):
     model = TransferNote
     template_name = 'products/transfer_list.html'
     context_object_name = 'transfer_notes'
@@ -122,5 +126,5 @@ class TransferListView(ListView):
         return context
 
 
-class WareHouseStockListView(ListView):
+class WareHouseStockListView(LoginRequiredMixin, ListView):
     model = WarehouseStock

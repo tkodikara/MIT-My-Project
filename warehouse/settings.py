@@ -145,3 +145,4 @@ MEDIA_ROOT = os.path.join(os.path.dirname(
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = reverse_lazy('accounts:login')
+LOGIN_URL = reverse_lazy('accounts:login')
