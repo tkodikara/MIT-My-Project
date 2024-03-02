@@ -43,7 +43,7 @@
                             <td>{{ stock.quantity }}</td>
                             <td>
                                 <a class="btn btn-sm btn-success"
-                                   href="{% url 'products:create-transfer-note' %}?qc_stock_id={{ stock.id }}">Accept Quantity</a>
+                                   href="{% url 'products:create-warehouse-stock' %}?transist_stock_id={{ stock.id }}">Accept Quantity</a>
                             </td>
                         </tr>
                     {% endfor %}

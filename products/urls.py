@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import (detail, ProductCreateView, UpdateQCStockView, QCStockListView,
                     CreateTransferNoteView, HomePage, TransferListView, scan_stock,
-                    WareHouseStockListView)
+                    WareHouseStockListView, WareHouseCreateView)
 
 app_name = 'products'
 urlpatterns = [
@@ -15,4 +15,6 @@ urlpatterns = [
     path('create-transfer-note/', CreateTransferNoteView.as_view(), name='create-transfer-note'),
     path('transfer-list/', TransferListView.as_view(), name='transfer-list'),
     path('warehouse-stock/', WareHouseStockListView.as_view(), name='warehouse-stock'),
+    path('create-warehouse-stock/', WareHouseCreateView.as_view(), name='create-warehouse-stock'),
+
 ]

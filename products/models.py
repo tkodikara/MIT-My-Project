@@ -81,23 +81,57 @@ class TransferNote(models.Model):
     def __str__(self):
         return f"{self.product} - {self.quantity}"
 
+    def add_quantity(self, quantity):
+        if quantity < 0:
+            raise ValueError("Quantity must be greater than 0")
+        self.quantity += quantity
+        self.save()
+
+    def remove_quantity(self, quantity):
+        if quantity < 0:
+            raise ValueError("Quantity must be greater than 0")
+        self.quantity -= quantity
+        self.save()
+
 
 class AllocatedLocation(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.TextField()
+    max_quantity = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    quantity = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.name}"
 
+    def add_quantity(self, quantity):
+        if quantity < 0:
+            raise ValueError("Quantity must be greater than 0")
+        if quantity > self.max_quantity:
+            raise ValueError("Quantity cannot be greater than the maximum quantity")
+        if quantity + self.quantity > self.max_quantity:
+            raise ValueError("Available Quantity is not enough to accommodate the quantity")
+        self.quantity += quantity
+        self.save()
+
+    def remove_quantity(self, quantity):
+        if quantity < 0:
+            raise ValueError("Quantity must be greater than 0")
+        self.available_quantity -= quantity
+        self.save()
+
 
 class WarehouseStock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(blank=True, null=True, default=0, validators=[MinValueValidator(0)])
     location = models.ForeignKey(AllocatedLocation, on_delete=models.CASCADE)
-    accepted_by = models.CharField(max_length=255)
+    accepted_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

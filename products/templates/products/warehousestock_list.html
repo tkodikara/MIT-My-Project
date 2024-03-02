@@ -8,51 +8,50 @@
     </header>
 
     <section>
-        <h2 class="text-center">Products </h2>
+        <h2 class="text-center">Warehouse Stock </h2>
 
 
     </section>
     <div class="container">
         <div class="row">
-
             <div class="col-12">
                 <table class="table custom-table">
+                    <thead>
                     <tr>
-                        <th> ID</th>
+                        <th>ID</th>
                         <th>Product ID</th>
                         <th>Code</th>
                         <th>Category</th>
-                        <th>Volume</th>
-                        <th>Weight</th>
-                        <th>Action</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Location </th>
+
                     </tr>
                     </thead>
                     <tbody>
                     <!-- Sample data, you should replace this with dynamic data from your system -->
-                    {% for stock in qc_stocks %}
+                    {% for stock in warehouse_stock %}
                         <tr>
                             <td>{{ stock.id }}</td>
                             <td>{{ stock.product.id }}</td>
                             <td>{{ stock.product.product_code }}</td>
                             <td>{{ stock.product.product_category }}</td>
-                            <td>{{ stock.product.product_volume }}</td>
-                            <td>{{ stock.product.product_weight }}</td>
+                            <td>{{ stock.product.product_description }}</td>
+                            <td>{{ stock.quantity }}</td>
                             <td>
-                                <a class="btn btn-sm btn-success"
-                                   href="{% url 'products:update-qc-stock' stock.id %}">Add Stock</a>
+                                {{ stock.location.name }}
                             </td>
                         </tr>
                     {% endfor %}
 
+
+                    <!-- Add more rows as needed -->
                     </tbody>
                 </table>
-
 
             </div>
         </div>
     </div>
-
-
 
 
 {% endblock content %}

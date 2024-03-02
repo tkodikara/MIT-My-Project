@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView
 from django.views import View
 
+from .forms import WarehouseForm
 from .models import Product, QCStock, TransferNote, WarehouseStock
 
 
@@ -128,3 +129,44 @@ class TransferListView(LoginRequiredMixin, ListView):
 
 class WareHouseStockListView(LoginRequiredMixin, ListView):
     model = WarehouseStock
+    template_name = 'products/warehousestock_list.html'
+    context_object_name = 'warehouse_stock'
+
+    def context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Warehouse Stock List - Warehouse Management System"
+        return context
+
+
+class WareHouseCreateView(CreateView):
+    model = WarehouseStock
+    template_name = 'products/warehouse_create.html'
+    success_url = reverse_lazy('products:warehouse-stock')
+    form_class = WarehouseForm
+
+    def get_transist_stock(self):
+        transist_stock = TransferNote.objects.get(pk=self.request.GET.get('transist_stock_id'))
+        return transist_stock
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['transist_stock'] = self.get_transist_stock()
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        transist_stock = self.get_transist_stock()
+        context['title'] = "Create Warehouse Stock - Warehouse Management System"
+        context['transist_stock'] = transist_stock
+        context['product'] = transist_stock.product
+        return context
+
+    def form_valid(self, form):
+        transist_stock = self.get_transist_stock()
+        product = transist_stock.product
+        form.instance.product = product
+        form.instance.accepted_by = self.request.user
+        transist_stock.remove_quantity(form.instance.quantity)
+        form.instance.location.quantity += form.instance.quantity
+        form.instance.location.save()
+        return super().form_valid(form)
