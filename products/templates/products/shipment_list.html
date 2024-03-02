@@ -31,7 +31,7 @@
                         <tr>
                         <td>{{ shipment.id }}</td>
                         <td>{{ shipment.shipment_number }}</td>
-                        <td><a href="" class="btn btn-success">Check Shipment</a> </td>
+                        <td><a href="{% url 'products:shipment-detail' shipment.pk %}" class="btn btn-success">Check Shipment</a> </td>
                         </tr>
                     {% endfor %}
                     <!-- Add more rows as needed -->

@@ -6,7 +6,7 @@ from django.views.generic import CreateView, UpdateView, ListView, DetailView
 from django.views import View
 
 from .forms import WarehouseForm, ShipmentItemForm
-from .models import Product, QCStock, TransferNote, WarehouseStock, Shipment, ShipmentItem
+from .models import Product, QCStock, TransferNote, WarehouseStock, Shipment, ShipmentItem, GatePass
 
 
 @login_required
@@ -240,3 +240,27 @@ class ShipmentListView(ListView):
         context = super().get_context_data(**kwargs)
         context['title'] = "Shipment List - Warehouse Management System"
         return context
+
+
+class ShipmentDetailView(DetailView):
+    template_name = 'products/shipment_detail.html'
+    model = Shipment
+    context_object_name = 'shipment'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Shipment Detail - Warehouse Management System"
+        return context
+
+
+class GatePassCreateView(CreateView):
+    model = GatePass
+    template_name = 'products/gatepass.html'
+    fields = ['container_number']
+
+    def form_valid(self, form):
+        form.instance.shipment = Shipment.objects.get(pk=self.request.GET.get('shipment_id'))
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('products:shipment-detail', kwargs={'pk': self.object.shipment.pk})

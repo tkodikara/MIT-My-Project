@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+    <header>
+        <h1>{{ title }}</h1>
+    </header>
+
+    <section>
+        <h2 class="text-center">Shipment for {{ shipment.shipment_number }} </h2>
+        {% if shipment.gatepass %}
+            <h3 class="text-center">Gatepass Number: {{ shipment.gatepass.gate_pass_number }} </h3>
+            <h3 class="text-center">Container Number: {{ shipment.gatepass.container_number }} </h3>
+
+        {% endif %}
+
+    </section>
+    <div class="container">
+        <div class="row">
+
+            <div class="col-12">
+                <table class="table custom-table">
+                    <tr>
+                        <th> ID</th>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Warehouse Location</th>
+                        <th>Quantity</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Sample data, you should replace this with dynamic data from your system -->
+                    {% for shipment_item in shipment.shipmentitem_set.all %}
+                        <tr>
+                            <td>{{ shipment_item.id }}</td>
+                            <td>{{ shipment_item.warehousestock.product.product_code }}</td>
+                            <td>{{ shipment_item.warehousestock.product.product_description }}</td>
+                            <td>{{ shipment_item.warehousestock.location.name }}</td>
+                            <td>{{ shipment_item.quantity }}</td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+                <div class="text-right">
+                    <a href="{% url 'products:cargo-gate-pass' %}?shipment_id={{ shipment.pk }}"
+                       class="btn btn-primary">Create Gate Pass</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+{% endblock content %}

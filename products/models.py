@@ -1,5 +1,5 @@
 # Create your models here.
-
+import uuid
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
@@ -172,3 +172,15 @@ class ShipmentItem(models.Model):
 
     def get_absolute_url(self):
         return reverse('products:shipment-update', kwargs={'pk': self.shipment.pk})
+
+
+class GatePass(models.Model):
+    shipment = models.OneToOneField(Shipment, on_delete=models.CASCADE, blank=True, null=True)
+    gate_pass_number = models.UUIDField(default=uuid.uuid4, null=True, blank=True)
+    container_number = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.gate_pass_number}"
+

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Product, QCStock, TransferNote, AllocatedLocation, WarehouseStock, Category, \
-    Shipment, ShipmentItem
+    Shipment, ShipmentItem, GatePass
 
 # Register your models here.
 admin.site.register(Product)
@@ -11,3 +11,4 @@ admin.site.register(WarehouseStock)
 admin.site.register(Category)
 admin.site.register(Shipment)
 admin.site.register(ShipmentItem)
+admin.site.register(GatePass)
