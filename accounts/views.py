@@ -1,3 +1,6 @@
-from django.shortcuts import render
+from django.contrib.auth.views import LoginView
 
-# Create your views here.
+
+class UserLoginView(LoginView):
+    """Override LoginView to specify template name."""
+    template_name = "accounts/login.html"

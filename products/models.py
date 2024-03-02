@@ -67,7 +67,7 @@ class QCStock(models.Model):
 
 
 class TransferNote(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     transferred_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -84,12 +84,22 @@ class TransferNote(models.Model):
 
 class AllocatedLocation(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
     description = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class WarehouseStock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    product_description = models.CharField(max_length=60)
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(blank=True, null=True, default=0, validators=[MinValueValidator(0)])
     location = models.ForeignKey(AllocatedLocation, on_delete=models.CASCADE)
     accepted_by = models.CharField(max_length=255)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.product.product_description}"

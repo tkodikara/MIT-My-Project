@@ -1,6 +1,6 @@
 
 {% extends 'base.html' %}
-{%load crispy_forms_tags %}
+
 
 {% block content %}
 
@@ -12,19 +12,45 @@
     <div class="container">
 
         <div class="row mt-5">
-            <div class="col-8">
-                <div class="card">
+            <div class="col-12">
+                <div class="card-group">
+                    <div class="card text-white bg-success mb-3 mr-5" style="max-width: 18rem;">
+                        <div class="card-header">
+                            <h2 class="bg-success"> Products</h2>
+                        </div>
                   <div class="card-body">
-                                <form method="post" class="post-form">
-                                        {% csrf_token %}
-                                        {{ form|crispy }}
-                                    <div class="text-right">
-                                         <button type="submit" class="save btn btn-primary">Save</button>
-                                    </div>
-                                </form>
+                      <h5 class="card-title">No of prodcuts </h5>
+                      <p class="card-text">150</p>
                   </div>
+                    </div>
+                    <div class="card text-white bg-info mb-3 mr-5" style="max-width: 18rem;">
+                        <div class="card-header">
+                            <h2 class="bg-info"> On Hand Stock</h2>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">No of On Hand Stock </h5>
+                            <p class="card-text">100</p>
+                        </div>
+                    </div>
+                    <div class="card text-white bg-secondary mb-3 mr-5" style="max-width: 18rem;">
+                        <div class="card-header">
+                            <h2 class="bg-secondary"> In Transit Stock</h2>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">No of In Transit Stock </h5>
+                            <p class="card-text">20</p>
+                        </div>
+                    </div>
+                    <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
+                        <div class="card-header">
+                            <h2 class="bg-warning"> QC Stock</h2>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">No of QCt Stock </h5>
+                            <p class="card-text">30</p>
+                        </div>
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>
