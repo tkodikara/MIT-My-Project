@@ -1,12 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, ListView
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
 from django.views import View
 
-from .forms import WarehouseForm
-from .models import Product, QCStock, TransferNote, WarehouseStock
+from .forms import WarehouseForm, ShipmentItemForm
+from .models import Product, QCStock, TransferNote, WarehouseStock, Shipment, ShipmentItem
 
 
 @login_required
@@ -170,3 +170,60 @@ class WareHouseCreateView(CreateView):
         form.instance.location.quantity += form.instance.quantity
         form.instance.location.save()
         return super().form_valid(form)
+
+
+class ShipmentCreateView(CreateView):
+    model = Shipment
+    template_name = 'products/shipment_create.html'
+    success_url = reverse_lazy('products:warehouse-stock')
+    fields = ['shipment_number']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Create Shipment - Warehouse Management System"
+        return context
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('products:shipment-update', kwargs={'pk': self.object.pk})
+
+
+class ShipmentUpdate(UpdateView):
+    model = Shipment
+    template_name = 'products/shipment_update.html'
+    fields = ['shipment_number']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Update Shipment - Warehouse Management System"
+        context['warehouse_stock'] = WarehouseStock.objects.all()
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('products:shipment-item-update', kwargs={'pk': self.object.shipment.pk})
+
+
+class ShimpentItemCreateView(CreateView):
+    model = ShipmentItem
+    template_name = 'products/shipment_update.html'
+    form_class = ShipmentItemForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Update Shipment - Warehouse Management System"
+        context['warehouse_stock'] = WarehouseStock.objects.all()
+        return context
+
+    def form_valid(self, form):
+        form.instance.warehousestock.quantity -= form.instance.quantity
+        form.instance.warehousestock.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('products:shipment-update', kwargs={'pk': self.object.shipment.pk})
+
+    def form_invalid(self, form):
+        return redirect(reverse_lazy('products:shipment-update', kwargs={'pk': form.instance.shipment.pk}))

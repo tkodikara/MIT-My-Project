@@ -5,6 +5,8 @@ from django.conf import settings
 from django.urls import reverse
 from django.core.validators import MinValueValidator
 
+from accounts.models import CustomUser
+
 
 class Category(models.Model):
     name = models.CharField(max_length=30)
@@ -137,3 +139,36 @@ class WarehouseStock(models.Model):
 
     def __str__(self):
         return f"{self.product.product_description}"
+
+
+class Shipment(models.Model):
+    shipment_number = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    created_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.shipment_number}"
+
+    def get_absolute_url(self):
+        return reverse('products:shipment-detail', kwargs={'pk': self.pk})
+
+
+class ShipmentItem(models.Model):
+    shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, blank=True, null=True)
+    warehousestock = models.ForeignKey(WarehouseStock, on_delete=models.CASCADE, blank=True, null=True)
+    quantity = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.quantity}"
+
+    def add_quantity(self, quantity):
+        if quantity < 0:
+            raise ValueError("Quantity must be greater than 0")
+        self.quantity += quantity
+        self.save()
+
+    def get_absolute_url(self):
+        return reverse('products:shipment-update', kwargs={'pk': self.shipment.pk})

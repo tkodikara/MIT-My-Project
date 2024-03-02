@@ -2,7 +2,8 @@ from django.urls import path
 
 from .views import (detail, ProductCreateView, UpdateQCStockView, QCStockListView,
                     CreateTransferNoteView, HomePage, TransferListView, scan_stock,
-                    WareHouseStockListView, WareHouseCreateView)
+                    WareHouseStockListView, WareHouseCreateView, ShipmentCreateView,
+                    ShimpentItemCreateView, ShipmentUpdate)
 
 app_name = 'products'
 urlpatterns = [
@@ -16,5 +17,7 @@ urlpatterns = [
     path('transfer-list/', TransferListView.as_view(), name='transfer-list'),
     path('warehouse-stock/', WareHouseStockListView.as_view(), name='warehouse-stock'),
     path('create-warehouse-stock/', WareHouseCreateView.as_view(), name='create-warehouse-stock'),
-
+    path('create-shipment/', ShipmentCreateView.as_view(), name='create-shipment'),
+    path('update-shipment/<int:pk>/', ShipmentUpdate.as_view(), name='shipment-update'),
+    path('allocate-shipment-item/', ShimpentItemCreateView.as_view(), name='shipment-item-create'),
 ]

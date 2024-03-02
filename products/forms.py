@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 
-from products.models import WarehouseStock, AllocatedLocation
+from products.models import WarehouseStock, AllocatedLocation, Shipment, ShipmentItem
 
 
 class WarehouseForm(ModelForm):
@@ -26,3 +26,17 @@ class WarehouseForm(ModelForm):
                                   f"current stock is {location.quantity} and max stock is "
                                   f"{location.max_quantity}")
         return location
+
+
+class ShipmentItemForm(ModelForm):
+    class Meta:
+        model = ShipmentItem
+        fields = ['quantity', 'warehousestock', 'shipment']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        warehousestock: WarehouseStock = cleaned_data.get('warehousestock')
+        quantity = cleaned_data.get('quantity')
+        if warehousestock.quantity < quantity:
+            raise ValidationError("Quantity cannot be greater than warehouse stock")
+        return cleaned_data
