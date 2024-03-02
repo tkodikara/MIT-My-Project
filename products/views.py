@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView
+from django.views import View
 
 from .models import Product, QCStock, TransferNote
 
@@ -76,3 +77,7 @@ class CreateTransferNoteView(CreateView):
         context['title'] = "Create Transfer Note - Warehouse Management System"
         context['product'] = product
         return context
+
+
+class HomePage(View):
+    template_name = "form_template.html"
