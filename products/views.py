@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView, DetailView
@@ -108,8 +109,16 @@ class HomePage(LoginRequiredMixin, View):
     template_name = "products/home_page.html"
 
     def get(self, request, *args, **kwargs):
+        product_count = Product.objects.all().count()
+        ware_house_stock = WarehouseStock.objects.aggregate(total_count=Sum('quantity'))
+        intransist_stock = TransferNote.objects.aggregate(total_count=Sum('quantity'))
+        qc_stock = QCStock.objects.aggregate(total_count=Sum('quantity'))
         context = {
-            "title": "Dashboard - Warehouse Management System"
+            "title": "Dashboard - Warehouse Management System",
+            "product_count": product_count,
+            "ware_house_stock_on_hand": ware_house_stock['total_count'] or 0,
+            "intransist_stock": intransist_stock['total_count'] or 0,
+            "qc_stock": qc_stock['total_count'] or 0,
         }
         return render(request, self.template_name, context)
 
