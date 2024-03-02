@@ -227,3 +227,16 @@ class ShimpentItemCreateView(CreateView):
 
     def form_invalid(self, form):
         return redirect(reverse_lazy('products:shipment-update', kwargs={'pk': form.instance.shipment.pk}))
+
+
+class ShipmentListView(ListView):
+    model = Shipment
+    template_name = 'products/shipment_list.html'
+    context_object_name = 'shipment_list'
+    paginate_by = 10
+    queryset = Shipment.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Shipment List - Warehouse Management System"
+        return context
