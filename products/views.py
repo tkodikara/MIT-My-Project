@@ -113,6 +113,9 @@ class HomePage(LoginRequiredMixin, View):
         ware_house_stock = WarehouseStock.objects.aggregate(total_count=Sum('quantity'))
         intransist_stock = TransferNote.objects.aggregate(total_count=Sum('quantity'))
         qc_stock = QCStock.objects.aggregate(total_count=Sum('quantity'))
+        # dictionary
+        # main data structure in python
+        # key value pairs in heap memory
         context = {
             "title": "Dashboard - Warehouse Management System",
             "product_count": product_count,

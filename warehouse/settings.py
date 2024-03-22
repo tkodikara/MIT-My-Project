@@ -33,19 +33,23 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # default django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # apps made by me
     'accounts',
     'products',
 
-
+    # third party apps
     "crispy_forms",
     "crispy_bootstrap4",
 ]
+# how have we defined user module
 AUTH_USER_MODEL = 'accounts.CustomUser'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
@@ -147,6 +151,6 @@ MEDIA_ROOT = os.path.join(os.path.dirname(
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'  # where the user is redirected once they are logged in
 LOGOUT_REDIRECT_URL = reverse_lazy('accounts:login')
 LOGIN_URL = reverse_lazy('accounts:login')
