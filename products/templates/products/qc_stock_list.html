@@ -8,7 +8,7 @@
     </header>
 
     <section>
-        <h2>QC Stock </h2>
+        <h2 class="text-center"> QC Stock </h2>
 
 
     </section>
@@ -34,19 +34,20 @@
                     <!-- Sample data, you should replace this with dynamic data from your system -->
                     {% for stock in qc_stocks %}
                         <tr>
-                        <td>{{ stock.product.id }}</td>
-                        <td>{{ stock.product.product_code }}</td>
-                        <td>{{ stock.product.product_category }}</td>
-                        <td>{{ stock.product.product_description }}</td>
-                        <td>{{ stock.quantity }}</td>
-                        <td>
-                            <a class="btn btn-sm btn-warning"
-                               href="{% url 'products:update-qc-stock' stock.id %}">Edit</a>
-                        </td>
-                        <td>
-                            <a class="btn btn-sm btn-success"
-                               href="{% url 'products:create-transfer-note' %}?qc_stock_id={{ stock.id }}">Transfer</a>
-                        </td>
+                            <td>{{ stock.product.id }}</td>
+                            <td>{{ stock.product.product_code }}</td>
+                            <td>{{ stock.product.product_category }}</td>
+                            <td>{{ stock.product.product_description }}</td>
+                            <td>{{ stock.quantity }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-warning"
+                                    href="{% url 'products:update-qc-stock' stock.id %}">Edit</a>
+                            </td>
+                            <td>
+                                 <a class="btn btn-sm btn-success"
+                                    href="{% url 'products:create-transfer-note' %}?qc_stock_id={{ stock.id }}">Transfer</a>
+                            </td>
+                        </tr>
                     {% endfor %}
 
 

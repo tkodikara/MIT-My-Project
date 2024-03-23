@@ -25,7 +25,7 @@ def scan_stock(request):
     qc_stocks = QCStock.objects.all()
     context = {
         "qc_stocks": qc_stocks,
-        "title": "Product List - Warehouse Management System"
+        "title": "Scan List - Warehouse Management System"
     }
     return render(request, "products/scan_stock.html", context)
 
