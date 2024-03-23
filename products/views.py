@@ -121,7 +121,7 @@ class HomePage(LoginRequiredMixin, View):
         context = {
             "products": products,
             "qc_stocks": qc_stocks,
-            "title": "Dashboard - Warehouse Management System",
+            "title": "MIS Dashboard - Warehouse Management System",
             "product_count": product_count,
             "ware_house_stock_on_hand": ware_house_stock['total_count'] or 0,
             "intransist_stock": intransist_stock['total_count'] or 0,
