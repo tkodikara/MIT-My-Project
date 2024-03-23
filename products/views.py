@@ -109,14 +109,18 @@ class HomePage(LoginRequiredMixin, View):
     template_name = "products/home_page.html"
 
     def get(self, request, *args, **kwargs):
-        product_count = Product.objects.all().count()
+        products = Product.objects.all()
+        product_count = products.count()
         ware_house_stock = WarehouseStock.objects.aggregate(total_count=Sum('quantity'))
         intransist_stock = TransferNote.objects.aggregate(total_count=Sum('quantity'))
         qc_stock = QCStock.objects.aggregate(total_count=Sum('quantity'))
+        qc_stocks = QCStock.objects.all()
         # dictionary
         # main data structure in python
         # key value pairs in heap memory
         context = {
+            "products": products,
+            "qc_stocks": qc_stocks,
             "title": "Dashboard - Warehouse Management System",
             "product_count": product_count,
             "ware_house_stock_on_hand": ware_house_stock['total_count'] or 0,
